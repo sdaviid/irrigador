@@ -42,6 +42,9 @@ def list_log(db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
