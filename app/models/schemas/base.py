@@ -5,3 +5,8 @@ from datetime import datetime
 class BaseSchema(BaseModel):
     class Config:
         orm_mode = True
+
+
+
+class errorMessage(BaseModel):
+    message: str
