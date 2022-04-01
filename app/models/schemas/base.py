@@ -10,3 +10,4 @@ class BaseSchema(BaseModel):
 
 class errorMessage(BaseModel):
     message: str
+
