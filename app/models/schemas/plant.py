@@ -12,6 +12,14 @@ class PlantAdd(BaseSchema):
     active: bool
 
 
+class PlantEdit(BaseSchema):
+    id: int
+    description: str
+    sprinkler_id: int
+    active: bool
+
+
+
 class Plant(BaseSchema):
     id: int
     description: str

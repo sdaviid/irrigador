@@ -13,14 +13,27 @@ class Sensor(Base):
     active = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.utcnow())
     @classmethod
-    def add(cls, session, description, active):
+    def add(cls, session, data):
         sensor = Sensor()
-        sensor.description = description
-        sensor.active = active
+        sensor.description = data.description
+        sensor.active = data.active
         session.add(sensor)
         session.commit()
         session.refresh(sensor)
         return Sensor.find_by_id(session=session, id=sensor.id)
+    @classmethod
+    def update(cls, session, data):
+        original = Sensor.find_by_id(session, id=data.id)
+        original.description = data.description
+        original.active = data.active
+        session.commit()
+        session.refresh(original)
+        return original
+    @classmethod
+    def delete(cls, session, id):
+        session.query(cls).filter_by(id=id).delete()
+        session.commit()
+        return 1
     @classmethod
     def list_all(cls, session):
         return session.query(cls).filter().all()

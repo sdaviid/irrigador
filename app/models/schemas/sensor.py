@@ -11,6 +11,11 @@ class SensorAdd(BaseSchema):
     active: bool
 
 
+class SensorEdit(BaseSchema):
+    id: int
+    description: str
+    active: bool
+
 
 class Sensor(BaseSchema):
     id: int

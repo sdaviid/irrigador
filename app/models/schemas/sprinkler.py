@@ -11,6 +11,13 @@ class SprinklerAdd(BaseSchema):
     active: bool
 
 
+class SprinklerEdit(BaseSchema):
+    id: int
+    description: str
+    sensor_id: int
+    active: bool
+
+
 class Sprinkler(BaseSchema):
     id: int
     description: str

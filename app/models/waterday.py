@@ -14,16 +14,31 @@ class WaterDay(Base):
     active = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.utcnow())
     @classmethod
-    def add(cls, session, week_day, water_time, plant_id, active):
+    def add(cls, session, data):
         waterday = WaterDay()
-        waterday.week_day = week_day
-        waterday.water_time = water_time
-        waterday.plant_id = plant_id
-        waterday.active = active
+        waterday.week_day = data.week_day
+        waterday.water_time = data.water_time
+        waterday.plant_id = data.plant_id
+        waterday.active = data.active
         session.add(waterday)
         session.commit()
         session.refresh(waterday)
         return WaterDay.find_by_id(session=session, id=waterday.id)
+    @classmethod
+    def update(cls, session, data):
+        original = WaterDay.find_by_id(session, id=data.id)
+        original.week_day = data.week_day
+        original.water_time = data.water_time
+        original.plant_id = data.plant_id
+        original.active = data.active
+        session.commit()
+        session.refresh(original)
+        return original
+    @classmethod
+    def delete(cls, session, id):
+        session.query(cls).filter_by(id=id).delete()
+        session.commit()
+        return 1
     @classmethod
     def list_all(cls, session):
         return session.query(cls).filter().all()

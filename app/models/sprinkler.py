@@ -14,15 +14,29 @@ class Sprinkler(Base):
     active = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.utcnow())
     @classmethod
-    def add(cls, session, description, sensor_id, active):
+    def add(cls, session, data):
         sprinkler = Sprinkler()
-        sprinkler.description = description
-        sprinkler.sensor_id = sensor_id
-        sprinkler.active = active
+        sprinkler.description = data.description
+        sprinkler.sensor_id = data.sensor_id
+        sprinkler.active = data.active
         session.add(sprinkler)
         session.commit()
         session.refresh(sprinkler)
         return Sprinkler.find_by_id(session=session, id=sprinkler.id)
+    @classmethod
+    def update(cls, session, data):
+        original = Sprinkler.find_by_id(session, id=data.id)
+        original.description = data.description
+        original.sensor_id = data.sensor_id
+        original.active = data.active
+        session.commit()
+        session.refresh(original)
+        return original
+    @classmethod
+    def delete(cls, session, id):
+        session.query(cls).filter_by(id=id).delete()
+        session.commit()
+        return 1
     @classmethod
     def list_all(cls, session):
         return session.query(cls).filter().all()

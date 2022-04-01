@@ -15,15 +15,29 @@ class Plant(Base):
     active = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.utcnow())
     @classmethod
-    def add(cls, session, description, sprinkler_id, active):
+    def add(cls, session, data):
         plant = Plant()
-        plant.description = description
-        plant.sprinkler_id = sprinkler_id
-        plant.active = active
+        plant.description = data.description
+        plant.sprinkler_id = data.sprinkler_id
+        plant.active = data.active
         session.add(plant)
         session.commit()
         session.refresh(plant)
         return Plant.find_by_id(session=session, id=plant.id)
+    @classmethod
+    def update(cls, session, data):
+        original = Plant.find_by_id(session, id=data.id)
+        original.description = data.description
+        original.sprinkler_id = data.sprinkler_id
+        original.active = data.active
+        session.commit()
+        session.refresh(original)
+        return original
+    @classmethod
+    def delete(cls, session, id):
+        session.query(cls).filter_by(id=id).delete()
+        session.commit()
+        return 1
     @classmethod
     def list_all(cls, session):
         return session.query(cls).filter().all()

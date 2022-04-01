@@ -13,10 +13,10 @@ class Log(Base):
     log_id = Column(Integer, ForeignKey("logtype.id"))
     date_created = Column(DateTime, default=datetime.utcnow())
     @classmethod
-    def add(cls, session, plant_id, log_id):
+    def add(cls, session, data):
         log = Log()
-        log.plant_id = plant_id
-        log.log_id = log_id
+        log.plant_id = data.plant_id
+        log.log_id = data.log_id
         session.add(log)
         session.commit()
         session.refresh(log)
