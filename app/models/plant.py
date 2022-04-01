@@ -26,6 +26,8 @@ class Plant(Base):
         return Plant.find_by_id(session=session, id=plant.id)
     @classmethod
     def update(cls, session, data):
+        if Plant.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         original = Plant.find_by_id(session, id=data.id)
         original.description = data.description
         original.sprinkler_id = data.sprinkler_id
@@ -48,4 +50,6 @@ class Plant(Base):
         return session.query(cls).filter().all()
     @classmethod
     def find_by_id(cls, session, id):
+        if Plant.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         return session.query(cls).filter_by(id=id).one()

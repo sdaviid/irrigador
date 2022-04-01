@@ -26,6 +26,8 @@ class Log(Base):
         return session.query(cls).filter().all()
     @classmethod
     def find_by_id(cls, session, id):
+        if Log.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         return session.query(cls).filter_by(id=id).one()
 
 

@@ -26,6 +26,8 @@ class WaterDay(Base):
         return WaterDay.find_by_id(session=session, id=waterday.id)
     @classmethod
     def update(cls, session, data):
+        if WaterDay.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         original = WaterDay.find_by_id(session, id=data.id)
         original.week_day = data.week_day
         original.water_time = data.water_time
@@ -49,4 +51,6 @@ class WaterDay(Base):
         return session.query(cls).filter().all()
     @classmethod
     def find_by_id(cls, session, id):
+        if WaterDay.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         return session.query(cls).filter_by(id=id).one()

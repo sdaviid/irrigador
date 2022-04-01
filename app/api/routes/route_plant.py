@@ -9,11 +9,13 @@ from app.models.schemas.plant import(
     PlantAdd,
     PlantEdit
 )
-from app.models.schemas.base import errorMessage
+from app.models.schemas.base import errorMessage, ValidatorError
 
 from app.core.database import get_db
 
 router = APIRouter()
+
+
 
 
 @router.get(
@@ -40,6 +42,9 @@ def list_plant(db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -57,11 +62,18 @@ def get_plant(id: int, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
-def update_plant(data: PlantEdit, db: Session = Depends(get_db)):
-    return plant.Plant.update(session=db, data=data)
+def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_db)):
+    temp_res = plant.Plant.update(session=db, data=data)
+    if not isinstance(temp_res, Plant):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return temp_res
 
 
 @router.put(
@@ -74,6 +86,9 @@ def update_plant(data: PlantEdit, db: Session = Depends(get_db)):
         },
         400: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -90,6 +105,9 @@ def create_plant(data: PlantAdd, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )

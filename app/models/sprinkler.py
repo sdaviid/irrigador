@@ -25,6 +25,8 @@ class Sprinkler(Base):
         return Sprinkler.find_by_id(session=session, id=sprinkler.id)
     @classmethod
     def update(cls, session, data):
+        if Sprinkler.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         original = Sprinkler.find_by_id(session, id=data.id)
         original.description = data.description
         original.sensor_id = data.sensor_id
@@ -47,4 +49,6 @@ class Sprinkler(Base):
         return session.query(cls).filter().all()
     @classmethod
     def find_by_id(cls, session, id):
+        if Sprinkler.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         return session.query(cls).filter_by(id=id).one()

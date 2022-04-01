@@ -10,7 +10,7 @@ from app.models.schemas.log import(
     LogType,
     LogAdd
 )
-from app.models.schemas.base import errorMessage
+from app.models.schemas.base import errorMessage, ValidatorError
 
 from app.core.database import get_db
 
@@ -60,6 +60,9 @@ def get_log(id: int, db: Session = Depends(get_db)):
         },
         400: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )

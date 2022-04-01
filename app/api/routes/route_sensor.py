@@ -9,7 +9,7 @@ from app.models.schemas.sensor import(
     SensorAdd,
     SensorEdit
 )
-from app.models.schemas.base import errorMessage
+from app.models.schemas.base import errorMessage, ValidatorError
 
 from app.core.database import get_db
 
@@ -41,6 +41,9 @@ def list_sensor(db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -59,6 +62,9 @@ def get_sensor(id: int, response: Response, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 
@@ -77,6 +83,9 @@ def update_sensor(data: SensorEdit, db: Session = Depends(get_db)):
         },
         400: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -93,6 +102,9 @@ def create_sensor(data:SensorAdd, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )

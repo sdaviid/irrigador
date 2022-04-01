@@ -9,7 +9,7 @@ from app.models.schemas.sprinkler import(
     SprinklerAdd,
     SprinklerEdit
 )
-from app.models.schemas.base import errorMessage
+from app.models.schemas.base import errorMessage, ValidatorError
 
 from app.core.database import get_db
 
@@ -41,6 +41,9 @@ def list_sprinkler(db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -58,6 +61,9 @@ def get_sprinkler(id:int, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -76,6 +82,9 @@ def update_sprinkler(data:SprinklerEdit, db: Session = Depends(get_db)):
         },
         400: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -92,6 +101,9 @@ def create_sprinkler(data: SprinklerAdd, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )

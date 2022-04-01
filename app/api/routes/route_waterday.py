@@ -10,7 +10,7 @@ from app.models.schemas.waterday import(
     WaterDayAdd,
     WaterDayEdit
 )
-from app.models.schemas.base import errorMessage
+from app.models.schemas.base import errorMessage, ValidatorError
 
 from app.core.database import get_db
 
@@ -42,6 +42,9 @@ def list_water_day(db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -59,6 +62,9 @@ def get_water_day(id: int, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -76,6 +82,9 @@ def update_water_day(data: WaterDayEdit, db: Session = Depends(get_db)):
         },
         400: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )
@@ -92,6 +101,9 @@ def create_water_day(data: WaterDayAdd, db: Session = Depends(get_db)):
         },
         404: {
             "model": errorMessage
+        },
+        422: {
+            "model": ValidatorError
         }
     }
 )

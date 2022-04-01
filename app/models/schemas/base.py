@@ -11,3 +11,8 @@ class BaseSchema(BaseModel):
 class errorMessage(BaseModel):
     message: str
 
+
+
+class ValidatorError(BaseModel):
+    message: str = "Invalid Content"
+

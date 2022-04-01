@@ -23,6 +23,8 @@ class Sensor(Base):
         return Sensor.find_by_id(session=session, id=sensor.id)
     @classmethod
     def update(cls, session, data):
+        if Sensor.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         original = Sensor.find_by_id(session, id=data.id)
         original.description = data.description
         original.active = data.active
@@ -44,4 +46,6 @@ class Sensor(Base):
         return session.query(cls).filter().all()
     @classmethod
     def find_by_id(cls, session, id):
+        if Sensor.has_id(session=session, id=data.id) == False:
+            return "Don't find ID specified"
         return session.query(cls).filter_by(id=id).one()
