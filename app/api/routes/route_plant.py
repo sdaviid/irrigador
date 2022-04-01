@@ -18,7 +18,13 @@ router = APIRouter()
 
 @router.get(
     '/list',
-    response_model=List[Plant]
+    status_code=status.HTTP_200_OK,
+    response_model=List[Plant],
+    responses={
+        200: {
+            "model": List[Plant]
+        }
+    }
 )
 def list_plant(db: Session = Depends(get_db)):
     return plant.Plant.list_all(session=db)
@@ -26,7 +32,16 @@ def list_plant(db: Session = Depends(get_db)):
 
 @router.get(
     '/get/{id}',
-    response_model=Plant
+    status_code=status.HTTP_200_OK,
+    response_model=Plant,
+    responses={
+        200: {
+            "model": Plant
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def get_plant(id: int, db: Session = Depends(get_db)):
     return plant.Plant.find_by_id(session=db, id=id)
@@ -34,7 +49,16 @@ def get_plant(id: int, db: Session = Depends(get_db)):
 
 @router.post(
     '/update',
-    response_model=Plant
+    status_code=status.HTTP_200_OK,
+    response_model=Plant,
+    responses={
+        200: {
+            "model": Plant
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def update_plant(data: PlantEdit, db: Session = Depends(get_db)):
     return plant.Plant.update(session=db, data=data)
@@ -42,14 +66,36 @@ def update_plant(data: PlantEdit, db: Session = Depends(get_db)):
 
 @router.put(
     '/create',
-    response_model=Plant
+    status_code=status.HTTP_201_CREATED,
+    response_model=Plant,
+    responses={
+        201: {
+            "model": Plant
+        },
+        400: {
+            "model": errorMessage
+        }
+    }
 )
 def create_plant(data: PlantAdd, db: Session = Depends(get_db)):
     return plant.Plant.add(session=db, data=data)
 
 
 @router.delete(
-    '/delete/{id}'
+    '/delete/{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {
+            "model": None
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
-def delete_plant(id: int, db: Session = Depends(get_db)):
-    return plant.Plant.delete(session=db, id=id)
+def delete_plant(id:int, response: Response, db: Session = Depends(get_db)):
+    temp_res = plant.Plant.delete(session=db, id=id)
+    if not isinstance(temp_res, bool):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

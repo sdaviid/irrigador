@@ -35,10 +35,15 @@ class WaterDay(Base):
         session.refresh(original)
         return original
     @classmethod
+    def has_id(cls, session, id):
+        return True if session.query(cls).filter_by(id=id).count() > 0 else False
+    @classmethod
     def delete(cls, session, id):
-        session.query(cls).filter_by(id=id).delete()
-        session.commit()
-        return 1
+        if Sensor.has_id(session=session, id=id) == True:
+            session.query(cls).filter_by(id=id).delete()
+            session.commit()
+            return True
+        return "Don't find ID specified"
     @classmethod
     def list_all(cls, session):
         return session.query(cls).filter().all()

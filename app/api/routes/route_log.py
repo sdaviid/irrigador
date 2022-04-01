@@ -20,7 +20,13 @@ router = APIRouter()
 
 @router.get(
     '/list',
-    response_model=List[Log]
+    status_code=status.HTTP_200_OK,
+    response_model=List[Log],
+    responses={
+        200: {
+            "model": List[Log]
+        }
+    }
 )
 def list_log(db: Session = Depends(get_db)):
     return log.Log.list_all(session=db)
@@ -28,7 +34,16 @@ def list_log(db: Session = Depends(get_db)):
 
 @router.get(
     '/get/{id}',
-    response_model=Log
+    status_code=status.HTTP_200_OK,
+    response_model=Log,
+    responses={
+        200: {
+            "model": Log
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def get_log(id: int, db: Session = Depends(get_db)):
     return log.Log.find_by_id(session=db, id=id)
@@ -37,7 +52,16 @@ def get_log(id: int, db: Session = Depends(get_db)):
 
 @router.put(
     '/create',
-    response_model=Log
+    status_code=status.HTTP_201_CREATED,
+    response_model=Log,
+    responses={
+        201: {
+            "model": Log
+        },
+        400: {
+            "model": errorMessage
+        }
+    }
 )
 def create_log(data: LogAdd, db: Session = Depends(get_db)):
     return log.Log.add(session=db, data=data)

@@ -22,12 +22,6 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
 
 
 app.include_router(api_router)

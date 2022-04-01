@@ -19,7 +19,13 @@ router = APIRouter()
 
 @router.get(
     '/list',
-    response_model=List[Sensor]
+    status_code=status.HTTP_200_OK,
+    response_model=List[Sensor],
+    responses={
+        200: {
+            "model": List[Sensor]
+        }
+    }
 )
 def list_sensor(db: Session = Depends(get_db)):
     return sensor.Sensor.list_all(session=db)
@@ -27,7 +33,16 @@ def list_sensor(db: Session = Depends(get_db)):
 
 @router.get(
     '/get/{id}',
-    response_model=Sensor
+    status_code=status.HTTP_200_OK,
+    response_model=Sensor,
+    responses={
+        200: {
+            "model": Sensor
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def get_sensor(id: int, response: Response, db: Session = Depends(get_db)):
     response.status_code = status.HTTP_409_CONFLICT
@@ -35,7 +50,18 @@ def get_sensor(id: int, response: Response, db: Session = Depends(get_db)):
 
 
 @router.post(
-    '/update'
+    '/update',
+    status_code=status.HTTP_200_OK,
+    response_model=Sensor,
+    responses={
+        200: {
+            "model": Sensor
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
+
 )
 def update_sensor(data: SensorEdit, db: Session = Depends(get_db)):
     return sensor.Sensor.update(session=db, data=data)
@@ -43,7 +69,16 @@ def update_sensor(data: SensorEdit, db: Session = Depends(get_db)):
 
 @router.put(
     '/create',
-    response_model=Sensor
+    status_code=status.HTTP_201_CREATED,
+    response_model=Sensor,
+    responses={
+        201: {
+            "model": Sensor
+        },
+        400: {
+            "model": errorMessage
+        }
+    }
 )
 def create_sensor(data:SensorAdd, db: Session = Depends(get_db)):
     return sensor.Sensor.add(session=db, data=data)

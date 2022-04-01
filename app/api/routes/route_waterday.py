@@ -20,7 +20,13 @@ router = APIRouter()
 
 @router.get(
     '/list',
-    response_model=List[WaterDay]
+    status_code=status.HTTP_200_OK,
+    response_model=List[WaterDay],
+    responses={
+        200: {
+            "model": List[WaterDay]
+        }
+    }
 )
 def list_water_day(db: Session = Depends(get_db)):
     return waterday.WaterDay.list_all(session=db)
@@ -28,7 +34,16 @@ def list_water_day(db: Session = Depends(get_db)):
 
 @router.get(
     '/get/{id}',
-    response_model=WaterDay
+    status_code=status.HTTP_200_OK,
+    response_model=WaterDay,
+    responses={
+        200: {
+            "model": WaterDay
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def get_water_day(id: int, db: Session = Depends(get_db)):
     return waterday.WaterDay.find_by_id(session=db, id=id)
@@ -36,7 +51,16 @@ def get_water_day(id: int, db: Session = Depends(get_db)):
 
 @router.post(
     '/update',
-    response_model=WaterDay
+    status_code=status.HTTP_200_OK,
+    response_model=WaterDay,
+    responses={
+        200: {
+            "model": WaterDay
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def update_water_day(data: WaterDayEdit, db: Session = Depends(get_db)):
     return waterday.WaterDay.update(session=db, data=data)
@@ -44,14 +68,36 @@ def update_water_day(data: WaterDayEdit, db: Session = Depends(get_db)):
 
 @router.put(
     '/create',
-    response_model=WaterDay
+    status_code=status.HTTP_201_CREATED,
+    response_model=WaterDay,
+    responses={
+        201: {
+            "model": WaterDay
+        },
+        400: {
+            "model": errorMessage
+        }
+    }
 )
 def create_water_day(data: WaterDayAdd, db: Session = Depends(get_db)):
     return waterday.WaterDay.add(session=db, data=data)
 
 
 @router.delete(
-    '/delete/{id}'
+    '/delete/{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {
+            "model": None
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
-def delete_water_day(id: int, db: Session = Depends(get_db)):
-    return waterday.WaterDay.delete(session=db, id=id)
+def delete_water_day(id:int, response: Response, db: Session = Depends(get_db)):
+    temp_res = waterday.WaterDay.delete(session=db, id=id)
+    if not isinstance(temp_res, bool):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

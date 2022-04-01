@@ -19,7 +19,13 @@ router = APIRouter()
 
 @router.get(
     '/list',
-    response_model=List[Sprinkler]
+    status_code=status.HTTP_200_OK,
+    response_model=List[Sprinkler],
+    responses={
+        200: {
+            "model": List[Sprinkler]
+        }
+    }
 )
 def list_sprinkler(db: Session = Depends(get_db)):
     return sprinkler.Sprinkler.list_all(session=db)
@@ -27,7 +33,16 @@ def list_sprinkler(db: Session = Depends(get_db)):
 
 @router.get(
     '/get/{id}',
-    response_model=Sprinkler
+    status_code=status.HTTP_200_OK,
+    response_model=Sprinkler,
+    responses={
+        200: {
+            "model": Sprinkler
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def get_sprinkler(id:int, db: Session = Depends(get_db)):
     return sprinkler.Sprinkler.find_by_id(session=db, id=id)
@@ -35,22 +50,54 @@ def get_sprinkler(id:int, db: Session = Depends(get_db)):
 
 @router.post(
     '/update',
-    response_model=Sprinkler
+    status_code=status.HTTP_200_OK,
+    response_model=Sprinkler,
+    responses={
+        200: {
+            "model": Sprinkler
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
 def update_sprinkler(data:SprinklerEdit, db: Session = Depends(get_db)):
     return sprinkler.Sprinkler.update(session=db, data=data)
 
 
+
 @router.put(
     '/create',
-    response_model=Sprinkler
+    status_code=status.HTTP_201_CREATED,
+    response_model=Sprinkler,
+    responses={
+        201: {
+            "model": Sprinkler
+        },
+        400: {
+            "model": errorMessage
+        }
+    }
 )
 def create_sprinkler(data: SprinklerAdd, db: Session = Depends(get_db)):
     return sprinkler.Sprinkler.add(session=db, data=data)
 
 
 @router.delete(
-    '/delete/{id}'
+    '/delete/{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {
+            "model": None
+        },
+        404: {
+            "model": errorMessage
+        }
+    }
 )
-def delete_sprinkler(id: int, db: Session = Depends(get_db)):
-    return sprinkler.Sprinkler.delete(session=db, id=id)
+def delete_sprinkler(id:int, response: Response, db: Session = Depends(get_db)):
+    temp_res = sprinkler.Sprinkler.delete(session=db, id=id)
+    if not isinstance(temp_res, bool):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
