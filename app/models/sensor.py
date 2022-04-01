@@ -11,4 +11,19 @@ class Sensor(Base):
     description = Column(String(255))
     sprinkler = relationship("Sprinkler", uselist=False, backref=backref("sensor"))
     active = Column(Boolean, default=False)
-    date_created = Column(Date, default=datetime.utcnow())
+    date_created = Column(DateTime, default=datetime.utcnow())
+    @classmethod
+    def add(cls, session, description, active):
+        sensor = Sensor()
+        sensor.description = description
+        sensor.active = active
+        session.add(sensor)
+        session.commit()
+        session.refresh(sensor)
+        return Sensor.find_by_id(session=session, id=sensor.id)
+    @classmethod
+    def list_all(cls, session):
+        return session.query(cls).filter().all()
+    @classmethod
+    def find_by_id(cls, session, id):
+        return session.query(cls).filter_by(id=id).one()

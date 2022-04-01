@@ -1,14 +1,21 @@
 from datetime import date
 from pydantic import BaseModel
 from datetime import datetime
+from app.models.schemas.base import BaseSchema
 
 
-class WaterDay(BaseModel):
+class WaterDayAdd(BaseSchema):
+    week_day: int
+    water_time: int
+    plant_id: int
+    active: bool
+
+
+
+class WaterDay(BaseSchema):
     id: int
     week_day: int
-    water_time: datetime
+    water_time: int
     plant_id: int
     active: bool
     date_created: datetime
-    class Config:
-        orm_mode = True

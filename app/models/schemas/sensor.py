@@ -2,12 +2,20 @@ from datetime import date
 from pydantic import BaseModel
 from datetime import datetime
 from app.models.schemas.sprinkler import Sprinkler
+from app.models.schemas.base import BaseSchema
 
 
-class Sensor(BaseModel):
+
+class SensorAdd(BaseSchema):
+    description: str
+    active: bool
+
+
+
+class Sensor(BaseSchema):
     id: int
     description: str
     active: bool
-    date_created: datetime
-    class Config:
-        orm_mode = True
+    date_created = datetime
+
+

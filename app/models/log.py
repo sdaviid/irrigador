@@ -9,10 +9,24 @@ from sqlalchemy.orm import relationship, backref
 class Log(Base):
     __tablename__ = "log"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    sprinkler_id = Column(Integer, ForeignKey("sprinkler.id"))
     plant_id = Column(Integer, ForeignKey("plant.id"))
-    log_id = Column(Integer, ForeignKey("log.id"))
+    log_id = Column(Integer, ForeignKey("logtype.id"))
     date_created = Column(DateTime, default=datetime.utcnow())
+    @classmethod
+    def add(cls, session, plant_id, log_id):
+        log = Log()
+        log.plant_id = plant_id
+        log.log_id = log_id
+        session.add(log)
+        session.commit()
+        session.refresh(log)
+        return Log.find_by_id(session=session, id=log.id)
+    @classmethod
+    def list_all(cls, session):
+        return session.query(cls).filter().all()
+    @classmethod
+    def find_by_id(cls, session, id):
+        return session.query(cls).filter_by(id=id).one()
 
 
 class LogType(Base):
