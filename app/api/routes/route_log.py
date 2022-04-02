@@ -56,9 +56,9 @@ def list_log(db: Session = Depends(get_db)):
         }
     }
 )
-def list_log(date_start: str, response: Response, date_end: str = None, db: Session = Depends(get_db)):
+def list_history(date_start: str, response: Response, date_end: str = None, db: Session = Depends(get_db)):
     temp_res = log.Log.find_by_date(session=db, date_start=date_start, date_end=date_end)
-    if not isinstance(temp_res, log.Log):
+    if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return JSONResponse(status_code=400, content=temp_res)
     return temp_res
