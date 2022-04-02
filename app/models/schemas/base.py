@@ -16,3 +16,7 @@ class errorMessage(BaseModel):
 class ValidatorError(BaseModel):
     message: str = "Invalid Content"
 
+
+class errorMessageDetail(BaseModel):
+    message: str
+    exception: str

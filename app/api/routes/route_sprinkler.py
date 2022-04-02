@@ -67,8 +67,12 @@ def get_sprinkler(id:int, db: Session = Depends(get_db)):
         }
     }
 )
-def update_sprinkler(data:SprinklerEdit, db: Session = Depends(get_db)):
-    return sprinkler.Sprinkler.update(session=db, data=data)
+def update_sprinkler(data:SprinklerEdit, response: Response, db: Session = Depends(get_db)):
+    temp_res = sprinkler.Sprinkler.update(session=db, data=data)
+    if not isinstance(temp_res, sprinkler.Sprinkler):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return temp_res
 
 
 

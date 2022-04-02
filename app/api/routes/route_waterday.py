@@ -1,8 +1,13 @@
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import Depends, Response, status, APIRouter
+from fastapi import(
+    Depends,
+    Response,
+    status,
+    APIRouter
+)
 from fastapi.responses import JSONResponse
-
+from datetime import datetime
 
 from app.models import waterday
 from app.models.schemas.waterday import(
@@ -10,9 +15,14 @@ from app.models.schemas.waterday import(
     WaterDayAdd,
     WaterDayEdit
 )
-from app.models.schemas.base import errorMessage, ValidatorError
+from app.models.schemas.base import(
+    errorMessage,
+    ValidatorError,
+    errorMessageDetail
+)
 
 from app.core.database import get_db
+
 
 
 router = APIRouter()
@@ -48,8 +58,12 @@ def list_water_day(db: Session = Depends(get_db)):
         }
     }
 )
-def get_water_day(id: int, db: Session = Depends(get_db)):
-    return waterday.WaterDay.find_by_id(session=db, id=id)
+def get_water_day(id: int, response: Response, db: Session = Depends(get_db)):
+    temp_res = waterday.WaterDay.find_by_id(session=db, id=id)
+    if not isinstance(temp_res, waterday.WaterDay):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return temp_res
 
 
 @router.post(
@@ -60,6 +74,9 @@ def get_water_day(id: int, db: Session = Depends(get_db)):
         200: {
             "model": WaterDay
         },
+        400: {
+            "model": errorMessageDetail
+        },
         404: {
             "model": errorMessage
         },
@@ -68,8 +85,16 @@ def get_water_day(id: int, db: Session = Depends(get_db)):
         }
     }
 )
-def update_water_day(data: WaterDayEdit, db: Session = Depends(get_db)):
-    return waterday.WaterDay.update(session=db, data=data)
+def update_water_day(data: WaterDayEdit, response: Response, db: Session = Depends(get_db)):
+    temp_res = waterday.WaterDay.update(session=db, data=data)
+    if not isinstance(temp_res, waterday.WaterDay):
+        if isinstance(temp_res, dict):
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return JSONResponse(status_code=400, content=temp_res)
+        else:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return JSONResponse(status_code=404, content={"message": temp_res})
+    return temp_res
 
 
 @router.put(
@@ -81,15 +106,19 @@ def update_water_day(data: WaterDayEdit, db: Session = Depends(get_db)):
             "model": WaterDay
         },
         400: {
-            "model": errorMessage
+            "model": errorMessageDetail
         },
         422: {
             "model": ValidatorError
         }
     }
 )
-def create_water_day(data: WaterDayAdd, db: Session = Depends(get_db)):
-    return waterday.WaterDay.add(session=db, data=data)
+def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depends(get_db)):
+    temp_res = waterday.WaterDay.add(session=db, data=data)
+    if not isinstance(temp_res, waterday.WaterDay):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return JSONResponse(status_code=400, content=temp_res)
+    return temp_res
 
 
 @router.delete(

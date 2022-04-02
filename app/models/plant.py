@@ -1,8 +1,21 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.types import Date, Boolean, Time, DateTime
+from sqlalchemy import(
+    Column,
+    Integer,
+    String,
+    ForeignKey
+)
+from sqlalchemy.types import(
+    Date,
+    Boolean,
+    Time,
+    DateTime
+)
+from sqlalchemy.orm import(
+    relationship,
+    backref
+)
 from app.core.database import Base
 from datetime import datetime
-from sqlalchemy.orm import relationship, backref
 
 
 class Plant(Base):
