@@ -12,7 +12,8 @@ from fastapi.responses import JSONResponse
 from app.models.domain import log
 from app.models.schemas.log import(
     Log,
-    LogAdd
+    LogAdd,
+    LogDetail
 )
 from app.models.schemas.base import(
     errorMessage,
@@ -29,10 +30,10 @@ router = APIRouter()
 @router.get(
     '/list',
     status_code=status.HTTP_200_OK,
-    response_model=List[Log],
+    response_model=List[LogDetail],
     responses={
         200: {
-            "model": List[Log]
+            "model": List[LogDetail]
         }
     }
 )

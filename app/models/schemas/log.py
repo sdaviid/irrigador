@@ -15,3 +15,10 @@ class Log(BaseSchema):
     date_created: datetime
 
 
+class LogDetail(BaseSchema):
+    id: int
+    plant_id: int
+    key: str
+    plant_description: str
+    sprinkler_description: str
+    date_created: datetime
