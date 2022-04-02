@@ -12,7 +12,6 @@ from fastapi.responses import JSONResponse
 from app.models.domain import log
 from app.models.schemas.log import(
     Log,
-    LogType,
     LogAdd
 )
 from app.models.schemas.base import(

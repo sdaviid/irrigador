@@ -24,7 +24,6 @@ class Log(ModelBase, Base):
     __tablename__ = "log"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     plant_id = Column(Integer, ForeignKey("plant.id"))
-    log_id = Column(Integer, ForeignKey("logtype.id"))
     date_created = Column(DateTime, default=datetime.utcnow())
     @classmethod
     def add(cls, session, data):
@@ -38,8 +37,3 @@ class Log(ModelBase, Base):
 
 
 
-class LogType(ModelBase, Base):
-    __tablename__ = "logtype"
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    description = Column(String(255))
-    log_type = relationship("Log", uselist=False, backref=backref("logtype"))

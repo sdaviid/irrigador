@@ -15,7 +15,3 @@ class Log(BaseSchema):
     date_created: datetime
 
 
-class LogType(BaseSchema):
-    id: int
-    description: str
-    log_type: Log
