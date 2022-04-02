@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, Response, status, APIRouter
 from fastapi.responses import JSONResponse
 
-from app.models import sprinkler
+from app.models.domain import sprinkler
 from app.models.schemas.sprinkler import(
     Sprinkler,
     SprinklerAdd,

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, Response, status, APIRouter
 from fastapi.responses import JSONResponse
 
-from app.models import plant
+from app.models.domain import plant
 from app.models.schemas.plant import(
     Plant,
     PlantAdd,

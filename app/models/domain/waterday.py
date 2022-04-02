@@ -14,16 +14,17 @@ from sqlalchemy.orm import(
     relationship,
     backref
 )
+from app.models.base import ModelBase
 from app.core.database import Base
 from datetime import datetime
 
-from app.models.plant import Plant
+from app.models.domain.plant import Plant
 from app.utils.utils import(
     str2time
 )
 
 
-class WaterDay(Base):
+class WaterDay(ModelBase, Base):
     __tablename__ = "waterday"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     week_day = Column(Integer)
@@ -82,21 +83,3 @@ class WaterDay(Base):
         session.commit()
         session.refresh(original)
         return original
-    @classmethod
-    def has_id(cls, session, id):
-        return True if session.query(cls).filter_by(id=id).count() > 0 else False
-    @classmethod
-    def delete(cls, session, id):
-        if Sensor.has_id(session=session, id=id) == True:
-            session.query(cls).filter_by(id=id).delete()
-            session.commit()
-            return True
-        return "Don't find ID specified"
-    @classmethod
-    def list_all(cls, session):
-        return session.query(cls).filter().all()
-    @classmethod
-    def find_by_id(cls, session, id):
-        if WaterDay.has_id(session=session, id=id) == False:
-            return "Don't find ID specified"
-        return session.query(cls).filter_by(id=id).one()

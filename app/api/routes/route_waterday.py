@@ -9,7 +9,7 @@ from fastapi import(
 from fastapi.responses import JSONResponse
 from datetime import datetime
 
-from app.models import waterday
+from app.models.domain import waterday
 from app.models.schemas.waterday import(
     WaterDay,
     WaterDayAdd,

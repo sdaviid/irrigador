@@ -14,12 +14,13 @@ from sqlalchemy.orm import(
     relationship,
     backref
 )
+from app.models.base import ModelBase
 from app.core.database import Base
 from datetime import datetime
 
 
 
-class Log(Base):
+class Log(ModelBase, Base):
     __tablename__ = "log"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     plant_id = Column(Integer, ForeignKey("plant.id"))
@@ -44,7 +45,7 @@ class Log(Base):
         return session.query(cls).filter_by(id=id).one()
 
 
-class LogType(Base):
+class LogType(ModelBase, Base):
     __tablename__ = "logtype"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     description = Column(String(255))
