@@ -15,7 +15,7 @@ class ModelBase(object):
         return True if session.query(cls).filter_by(id=id).count() > 0 else False
     @classmethod
     def delete(cls, session, id):
-        if Sensor.has_id(session=session, id=id) == True:
+        if cls.has_id(session=session, id=id) == True:
             session.query(cls).filter_by(id=id).delete()
             session.commit()
             return True
