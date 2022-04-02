@@ -1,6 +1,11 @@
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import Depends, Response, status, APIRouter
+from fastapi import(
+    Depends,
+    Response,
+    status,
+    APIRouter
+)
 from fastapi.responses import JSONResponse
 
 from app.models.domain import plant
@@ -9,7 +14,11 @@ from app.models.schemas.plant import(
     PlantAdd,
     PlantEdit
 )
-from app.models.schemas.base import errorMessage, ValidatorError
+from app.models.schemas.base import(
+    errorMessage,
+    ValidatorError,
+    errorMessageDetail
+)
 
 from app.core.database import get_db
 
@@ -48,8 +57,12 @@ def list_plant(db: Session = Depends(get_db)):
         }
     }
 )
-def get_plant(id: int, db: Session = Depends(get_db)):
-    return plant.Plant.find_by_id(session=db, id=id)
+def get_plant(id: int, response: Response, db: Session = Depends(get_db)):
+    temp_res = plant.Plant.find_by_id(session=db, id=id)
+    if not isinstance(temp_res, plant.Plant):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return temp_res
 
 
 @router.post(
@@ -59,6 +72,9 @@ def get_plant(id: int, db: Session = Depends(get_db)):
     responses={
         200: {
             "model": Plant
+        },
+        400: {
+            "model": errorMessageDetail
         },
         404: {
             "model": errorMessage
@@ -71,8 +87,12 @@ def get_plant(id: int, db: Session = Depends(get_db)):
 def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_db)):
     temp_res = plant.Plant.update(session=db, data=data)
     if not isinstance(temp_res, Plant):
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return JSONResponse(status_code=404, content={"message": temp_res})
+        if isinstance(temp_res, dict):
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return JSONResponse(status_code=400, content=temp_res)
+        else:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return JSONResponse(status_code=404, content={"message": temp_res})
     return temp_res
 
 
@@ -85,15 +105,19 @@ def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_
             "model": Plant
         },
         400: {
-            "model": errorMessage
+            "model": errorMessageDetail
         },
         422: {
             "model": ValidatorError
         }
     }
 )
-def create_plant(data: PlantAdd, db: Session = Depends(get_db)):
-    return plant.Plant.add(session=db, data=data)
+def create_plant(data: PlantAdd, response: Response, db: Session = Depends(get_db)):
+    temp_res = plant.Plant.add(session=db, data=data)
+    if not isinstance(temp_res, plant.Plant):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return JSONResponse(status_code=400, content=temp_res)
+    return temp_res
 
 
 @router.delete(

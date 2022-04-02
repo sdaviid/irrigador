@@ -1,6 +1,11 @@
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import Depends, Response, status, APIRouter
+from fastapi import(
+    Depends,
+    Response,
+    status,
+    APIRouter
+)
 from fastapi.responses import JSONResponse
 
 from app.models.domain import sprinkler
@@ -9,7 +14,11 @@ from app.models.schemas.sprinkler import(
     SprinklerAdd,
     SprinklerEdit
 )
-from app.models.schemas.base import errorMessage, ValidatorError
+from app.models.schemas.base import(
+    errorMessage,
+    ValidatorError,
+    errorMessageDetail
+)
 
 from app.core.database import get_db
 
@@ -47,8 +56,12 @@ def list_sprinkler(db: Session = Depends(get_db)):
         }
     }
 )
-def get_sprinkler(id:int, db: Session = Depends(get_db)):
-    return sprinkler.Sprinkler.find_by_id(session=db, id=id)
+def get_sprinkler(id:int, response: Response, db: Session = Depends(get_db)):
+    temp_res = sprinkler.Sprinkler.find_by_id(session=db, id=id)
+    if not isinstance(temp_res, sprinkler.Sprinkler):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return temp_res
 
 
 @router.post(
@@ -58,6 +71,9 @@ def get_sprinkler(id:int, db: Session = Depends(get_db)):
     responses={
         200: {
             "model": Sprinkler
+        },
+        400: {
+            "model": errorMessageDetail
         },
         404: {
             "model": errorMessage
@@ -70,8 +86,12 @@ def get_sprinkler(id:int, db: Session = Depends(get_db)):
 def update_sprinkler(data:SprinklerEdit, response: Response, db: Session = Depends(get_db)):
     temp_res = sprinkler.Sprinkler.update(session=db, data=data)
     if not isinstance(temp_res, sprinkler.Sprinkler):
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return JSONResponse(status_code=404, content={"message": temp_res})
+        if isinstance(temp_res, dict):
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return JSONResponse(status_code=400, content=temp_res)
+        else:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return JSONResponse(status_code=404, content={"message": temp_res})
     return temp_res
 
 
@@ -85,15 +105,19 @@ def update_sprinkler(data:SprinklerEdit, response: Response, db: Session = Depen
             "model": Sprinkler
         },
         400: {
-            "model": errorMessage
+            "model": errorMessageDetail
         },
         422: {
             "model": ValidatorError
         }
     }
 )
-def create_sprinkler(data: SprinklerAdd, db: Session = Depends(get_db)):
-    return sprinkler.Sprinkler.add(session=db, data=data)
+def create_sprinkler(data: SprinklerAdd, response: Response, db: Session = Depends(get_db)):
+    temp_res = sprinkler.Sprinkler.add(session=db, data=data)
+    if not isinstance(temp_res, sprinkler.Sprinkler):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return JSONResponse(status_code=400, content=temp_res)
+    return temp_res
 
 
 @router.delete(

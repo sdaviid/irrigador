@@ -35,14 +35,7 @@ class Log(ModelBase, Base):
         session.commit()
         session.refresh(log)
         return Log.find_by_id(session=session, id=log.id)
-    @classmethod
-    def list_all(cls, session):
-        return session.query(cls).filter().all()
-    @classmethod
-    def find_by_id(cls, session, id):
-        if Log.has_id(session=session, id=data.id) == False:
-            return "Don't find ID specified"
-        return session.query(cls).filter_by(id=id).one()
+
 
 
 class LogType(ModelBase, Base):

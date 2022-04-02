@@ -1,6 +1,11 @@
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import Depends, Response, status, APIRouter
+from fastapi import(
+    Depends,
+    Response,
+    status,
+    APIRouter
+)
 from fastapi.responses import JSONResponse
 
 
@@ -10,7 +15,11 @@ from app.models.schemas.log import(
     LogType,
     LogAdd
 )
-from app.models.schemas.base import errorMessage, ValidatorError
+from app.models.schemas.base import(
+    errorMessage,
+    ValidatorError,
+    errorMessageDetail
+)
 
 from app.core.database import get_db
 
@@ -48,8 +57,12 @@ def list_log(db: Session = Depends(get_db)):
         }
     }
 )
-def get_log(id: int, db: Session = Depends(get_db)):
-    return log.Log.find_by_id(session=db, id=id)
+def get_log(id: int, response: Response, db: Session = Depends(get_db)):
+    temp_res = log.Log.find_by_id(session=db, id=id)
+    if not isinstance(temp_res, log.Log):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    return temp_res
 
 
 
@@ -62,12 +75,16 @@ def get_log(id: int, db: Session = Depends(get_db)):
             "model": Log
         },
         400: {
-            "model": errorMessage
+            "model": errorMessageDetail
         },
         422: {
             "model": ValidatorError
         }
     }
 )
-def create_log(data: LogAdd, db: Session = Depends(get_db)):
-    return log.Log.add(session=db, data=data)
+def create_log(data: LogAdd, response: Response, db: Session = Depends(get_db)):
+    temp_res = log.Log.add(session=db, data=data)
+    if not isinstance(temp_res, log.Log):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return JSONResponse(status_code=400, content=temp_res)
+    return temp_res
