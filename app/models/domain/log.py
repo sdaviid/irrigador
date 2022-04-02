@@ -24,12 +24,13 @@ class Log(ModelBase, Base):
     __tablename__ = "log"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     plant_id = Column(Integer, ForeignKey("plant.id"))
+    key = Column(String(15))
     date_created = Column(DateTime, default=datetime.utcnow())
     @classmethod
     def add(cls, session, data):
         log = Log()
         log.plant_id = data.plant_id
-        log.log_id = data.log_id
+        log.key = data.key
         session.add(log)
         session.commit()
         session.refresh(log)
