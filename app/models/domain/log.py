@@ -25,6 +25,9 @@ from app.utils.utils import(
     str2date
 )
 
+import warnings
+from sqlalchemy import exc as sa_exc
+
 
 class Log(ModelBase, Base):
     __tablename__ = "log"
@@ -71,14 +74,19 @@ class Log(ModelBase, Base):
     def find_by_id(cls, session, id):
         if cls.has_id(session=session, id=id) == False:
             return "Don't find ID specified"
-        return session.query(
-            cls.id,
-            cls.plant_id,
-            cls.key,
-            Plant.description.label('plant_description'),
-            Sprinkler.description.label('sprinkler_description'),
-            cls.date_created
-        ).filter_by(id=id).first()
+        response = False
+        #workaround disable warning from sqlalchemy https://stackoverflow.com/a/5225951
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=sa_exc.SAWarning)
+            response = session.query(
+                cls.id,
+                cls.plant_id,
+                cls.key,
+                Plant.description.label('plant_description'),
+                Sprinkler.description.label('sprinkler_description'),
+                cls.date_created
+            ).filter_by(id=id).first()
+        return response
     @classmethod
     def find_by_date(cls, session, date_start, date_end=None):
         date_start = str2date(date_start)

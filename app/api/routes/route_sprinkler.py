@@ -57,6 +57,7 @@ def list_sprinkler(db: Session = Depends(get_db)):
     }
 )
 def get_sprinkler(id:int, response: Response, db: Session = Depends(get_db)):
+    """Retrieve information about specific Sprinkler"""
     temp_res = sprinkler.Sprinkler.find_by_id(session=db, id=id)
     if not isinstance(temp_res, sprinkler.Sprinkler):
         response.status_code = status.HTTP_404_NOT_FOUND
