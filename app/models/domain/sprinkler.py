@@ -30,7 +30,6 @@ class Sprinkler(ModelBase, Base):
     def add(cls, session, data):
         sprinkler = Sprinkler()
         sprinkler.description = data.description
-        sprinkler.sensor_id = data.sensor_id
         sprinkler.active = data.active
         session.add(sprinkler)
         session.commit()
@@ -42,7 +41,6 @@ class Sprinkler(ModelBase, Base):
             return "Don't find ID specified"
         original = Sprinkler.find_by_id(session, id=data.id)
         original.description = data.description
-        original.sensor_id = data.sensor_id
         original.active = data.active
         session.commit()
         session.refresh(original)

@@ -13,7 +13,8 @@ from app.models.domain import waterday
 from app.models.schemas.waterday import(
     WaterDay,
     WaterDayAdd,
-    WaterDayEdit
+    WaterDayEdit,
+    WaterDayDetail
 )
 from app.models.schemas.base import(
     errorMessage,
@@ -31,10 +32,10 @@ router = APIRouter()
 @router.get(
     '/list',
     status_code=status.HTTP_200_OK,
-    response_model=List[WaterDay],
+    response_model=List[WaterDayDetail],
     responses={
         200: {
-            "model": List[WaterDay]
+            "model": List[WaterDayDetail]
         }
     }
 )
@@ -45,10 +46,10 @@ def list_water_day(db: Session = Depends(get_db)):
 @router.get(
     '/get/{id}',
     status_code=status.HTTP_200_OK,
-    response_model=WaterDay,
+    response_model=WaterDayDetail,
     responses={
         200: {
-            "model": WaterDay
+            "model": WaterDayDetail
         },
         404: {
             "model": errorMessage
@@ -59,8 +60,8 @@ def list_water_day(db: Session = Depends(get_db)):
     }
 )
 def get_water_day(id: int, response: Response, db: Session = Depends(get_db)):
-    temp_res = waterday.WaterDay.find_by_id(session=db, id=id)
-    if not isinstance(temp_res, waterday.WaterDay):
+    temp_res = waterday.WaterDay.find_by_id_detail(session=db, id=id)
+    if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
     return temp_res
@@ -115,7 +116,7 @@ def update_water_day(data: WaterDayEdit, response: Response, db: Session = Depen
 )
 def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depends(get_db)):
     temp_res = waterday.WaterDay.add(session=db, data=data)
-    if not isinstance(temp_res, waterday.WaterDay):
+    if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return JSONResponse(status_code=400, content=temp_res)
     return temp_res

@@ -12,7 +12,8 @@ from app.models.domain import plant
 from app.models.schemas.plant import(
     Plant,
     PlantAdd,
-    PlantEdit
+    PlantEdit,
+    PlantDetail
 )
 from app.models.schemas.base import(
     errorMessage,
@@ -30,10 +31,10 @@ router = APIRouter()
 @router.get(
     '/list',
     status_code=status.HTTP_200_OK,
-    response_model=List[Plant],
+    response_model=List[PlantDetail],
     responses={
         200: {
-            "model": List[Plant]
+            "model": List[PlantDetail]
         }
     }
 )
@@ -44,10 +45,10 @@ def list_plant(db: Session = Depends(get_db)):
 @router.get(
     '/get/{id}',
     status_code=status.HTTP_200_OK,
-    response_model=Plant,
+    response_model=PlantDetail,
     responses={
         200: {
-            "model": Plant
+            "model": PlantDetail
         },
         404: {
             "model": errorMessage
@@ -58,8 +59,8 @@ def list_plant(db: Session = Depends(get_db)):
     }
 )
 def get_plant(id: int, response: Response, db: Session = Depends(get_db)):
-    temp_res = plant.Plant.find_by_id(session=db, id=id)
-    if not isinstance(temp_res, plant.Plant):
+    temp_res = plant.Plant.find_by_id_detail(session=db, id=id)
+    if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
     return temp_res
@@ -86,14 +87,14 @@ def get_plant(id: int, response: Response, db: Session = Depends(get_db)):
 )
 def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_db)):
     temp_res = plant.Plant.update(session=db, data=data)
-    if not isinstance(temp_res, Plant):
-        if isinstance(temp_res, dict):
-            response.status_code = status.HTTP_400_BAD_REQUEST
-            return JSONResponse(status_code=400, content=temp_res)
-        else:
-            response.status_code = status.HTTP_404_NOT_FOUND
-            return JSONResponse(status_code=404, content={"message": temp_res})
-    return temp_res
+    if isinstance(temp_res, dict):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return JSONResponse(status_code=400, content=temp_res)
+    elif isinstance(temp_res, str):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return JSONResponse(status_code=404, content={"message": temp_res})
+    else:
+        return temp_res
 
 
 @router.put(
@@ -114,7 +115,8 @@ def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_
 )
 def create_plant(data: PlantAdd, response: Response, db: Session = Depends(get_db)):
     temp_res = plant.Plant.add(session=db, data=data)
-    if not isinstance(temp_res, plant.Plant):
+    print(type(temp_res))
+    if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return JSONResponse(status_code=400, content=temp_res)
     return temp_res

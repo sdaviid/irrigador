@@ -109,7 +109,7 @@ def get_log(id: int, response: Response, db: Session = Depends(get_db)):
 )
 def create_log(data: LogAdd, response: Response, db: Session = Depends(get_db)):
     temp_res = log.Log.add(session=db, data=data)
-    if not isinstance(temp_res, log.Log):
+    if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return JSONResponse(status_code=400, content=temp_res)
     return temp_res

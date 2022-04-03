@@ -83,3 +83,29 @@ class WaterDay(ModelBase, Base):
         session.commit()
         session.refresh(original)
         return original
+    @classmethod
+    def list_all(cls, session):
+        return session.query(
+            cls.id,
+            cls.week_day,
+            cls.time_day,
+            cls.water_time,
+            cls.plant_id,
+            cls.active,
+            Plant.description.label('plant_description'),
+            cls.date_created
+        ).filter().all()
+    @classmethod
+    def find_by_id_detail(cls, session, id):
+        if cls.has_id(session=session, id=id) == False:
+            return "Don't find ID specified"
+        return session.query(
+            cls.id,
+            cls.week_day,
+            cls.time_day,
+            cls.water_time,
+            cls.plant_id,
+            cls.active,
+            Plant.description.label('plant_description'),
+            cls.date_created
+        ).filter_by(id=id).first()

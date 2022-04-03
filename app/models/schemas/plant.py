@@ -26,3 +26,12 @@ class Plant(BaseSchema):
     sprinkler_id: int
     active: bool
     date_created: datetime
+
+
+class PlantDetail(BaseSchema):
+    id: int
+    description: str
+    sprinkler_id: int
+    active: bool
+    sprinkler_description: str
+    date_created: datetime

@@ -21,9 +21,6 @@ class WaterDayEdit(BaseSchema):
     active: bool
 
 
-
-
-
 class WaterDay(BaseSchema):
     id: int
     week_day: int
@@ -31,4 +28,15 @@ class WaterDay(BaseSchema):
     water_time: int
     plant_id: int
     active: bool
+    date_created: datetime
+
+
+class WaterDayDetail(BaseSchema):
+    id: int
+    week_day: int
+    time_day: str
+    water_time: int
+    plant_id: int
+    active: bool
+    plant_description: str
     date_created: datetime

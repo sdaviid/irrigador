@@ -78,7 +78,7 @@ class Log(ModelBase, Base):
             Plant.description.label('plant_description'),
             Sprinkler.description.label('sprinkler_description'),
             cls.date_created
-        ).filter_by(id=id).one()
+        ).filter_by(id=id).first()
     @classmethod
     def find_by_date(cls, session, date_start, date_end=None):
         date_start = str2date(date_start)
