@@ -29,7 +29,7 @@ router = APIRouter()
 
 
 @router.get(
-    '/list',
+    '',
     status_code=status.HTTP_200_OK,
     response_model=List[PlantDetail],
     responses={
@@ -43,7 +43,7 @@ def list_plant(db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/get/{id}',
+    '/{id}',
     status_code=status.HTTP_200_OK,
     response_model=PlantDetail,
     responses={
@@ -67,7 +67,7 @@ def get_plant(id: int, response: Response, db: Session = Depends(get_db)):
 
 
 @router.post(
-    '/update',
+    '',
     status_code=status.HTTP_200_OK,
     response_model=Plant,
     responses={
@@ -98,7 +98,7 @@ def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_
 
 
 @router.put(
-    '/create',
+    '',
     status_code=status.HTTP_201_CREATED,
     response_model=Plant,
     responses={
@@ -123,7 +123,7 @@ def create_plant(data: PlantAdd, response: Response, db: Session = Depends(get_d
 
 
 @router.delete(
-    '/delete/{id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {

@@ -9,7 +9,7 @@ client = TestClient(app)
 #sprinkler
 @pytest.mark.order(3)
 def test_update_sprinkler(test_update):
-    response = test_update.post("/sprinkler/update", json={
+    response = test_update.post("/sprinkler", json={
         "id": 1,
         "description": "test_sprinkler_01_updated",
         "active": True
@@ -20,7 +20,7 @@ def test_update_sprinkler(test_update):
 
 @pytest.mark.order(3)
 def test_update_sprinkler_inexist_id(test_update):
-    response = test_update.post("/sprinkler/update", json={
+    response = test_update.post("/sprinkler", json={
         "id": 0,
         "description": "test_sprinkler_01_updated",
         "active": True
@@ -32,7 +32,7 @@ def test_update_sprinkler_inexist_id(test_update):
 
 @pytest.mark.order(3)
 def test_update_sprinkler_wrong_value(test_update):
-    response = test_update.post("/sprinkler/update", json={
+    response = test_update.post("/sprinkler", json={
         "id": 1,
         "description": "test_sprinkler_01_updated",
         "active": 3
@@ -45,7 +45,7 @@ def test_update_sprinkler_wrong_value(test_update):
 #plant
 @pytest.mark.order(3)
 def test_update_plant(test_update):
-    response = test_update.post("/plant/update", json={
+    response = test_update.post("/plant", json={
             "id": 1,
             "description": "test_plant_01_updated",
             "sprinkler_id": 1,
@@ -57,7 +57,7 @@ def test_update_plant(test_update):
 
 @pytest.mark.order(3)
 def test_update_plant_inexist_id(test_update):
-    response = test_update.post("/plant/update", json={
+    response = test_update.post("/plant", json={
             "id": 0,
             "description": "test_plant_01_updated",
             "sprinkler_id": 1,
@@ -70,7 +70,7 @@ def test_update_plant_inexist_id(test_update):
 
 @pytest.mark.order(3)
 def test_update_plant_inexist_sprinkler_id(test_update):
-    response = test_update.post("/plant/update", json={
+    response = test_update.post("/plant", json={
             "id": 1,
             "description": "test_plant_01_updated_wrong_sprinkler_id",
             "sprinkler_id": 0,
@@ -82,7 +82,7 @@ def test_update_plant_inexist_sprinkler_id(test_update):
 
 @pytest.mark.order(3)
 def test_update_plant_wrong_value(test_update):
-    response = test_update.post("/plant/update", json={
+    response = test_update.post("/plant", json={
             "id": 1,
             "description": "test_plant_01_updated_wrong_value",
             "sprinkler_id": 1,
@@ -96,7 +96,7 @@ def test_update_plant_wrong_value(test_update):
 #water day
 @pytest.mark.order(3)
 def test_update_waterday(test_update):
-    response = test_update.post("/waterday/update", json={
+    response = test_update.post("/waterday", json={
             "id": 1,
             "week_day": 0,
             "time_day": "12:30",
@@ -110,7 +110,7 @@ def test_update_waterday(test_update):
 
 @pytest.mark.order(3)
 def test_update_waterday_indexist_id(test_update):
-    response = test_update.post("/waterday/update", json={
+    response = test_update.post("/waterday", json={
             "id": 0,
             "week_day": 0,
             "time_day": "12:30",
@@ -126,7 +126,7 @@ def test_update_waterday_indexist_id(test_update):
 
 @pytest.mark.order(3)
 def test_update_waterday_wrong_week_day(test_update):
-    response = test_update.post("/waterday/update", json={
+    response = test_update.post("/waterday", json={
             "id": 1,
             "week_day": 7,
             "time_day": "12:30",
@@ -142,7 +142,7 @@ def test_update_waterday_wrong_week_day(test_update):
 
 @pytest.mark.order(3)
 def test_update_waterday_wrong_time_day(test_update):
-    response = test_update.post("/waterday/update", json={
+    response = test_update.post("/waterday", json={
             "id": 1,
             "week_day": 0,
             "time_day": "1c:30",
@@ -159,7 +159,7 @@ def test_update_waterday_wrong_time_day(test_update):
 
 @pytest.mark.order(3)
 def test_update_waterday_wrong_value_timeday(test_update):
-    response = test_update.post("/waterday/update", json={
+    response = test_update.post("/waterday", json={
             "id": 1,
             "week_day": 0,
             "time_day": "12:30",
@@ -173,7 +173,7 @@ def test_update_waterday_wrong_value_timeday(test_update):
 
 @pytest.mark.order(3)
 def test_update_waterday_inextis_plant_id(test_update):
-    response = test_update.post("/waterday/update", json={
+    response = test_update.post("/waterday", json={
             "id": 1,
             "week_day": 0,
             "time_day": "12:30",

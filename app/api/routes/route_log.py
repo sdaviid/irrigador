@@ -29,7 +29,7 @@ router = APIRouter()
 
 
 @router.get(
-    '/list',
+    '',
     status_code=status.HTTP_200_OK,
     response_model=List[LogDetail],
     responses={
@@ -67,7 +67,7 @@ def list_history(date_start: str, response: Response, date_end: str = None, db: 
 
 
 @router.get(
-    '/get/{id}',
+    '/{id}',
     status_code=status.HTTP_200_OK,
     response_model=LogDetail,
     responses={
@@ -92,7 +92,7 @@ def get_log(id: int, response: Response, db: Session = Depends(get_db)):
 
 
 @router.put(
-    '/create',
+    '',
     status_code=status.HTTP_201_CREATED,
     response_model=Log,
     responses={

@@ -27,7 +27,7 @@ router = APIRouter()
 
 
 @router.get(
-    '/list',
+    '',
     status_code=status.HTTP_200_OK,
     response_model=List[Sprinkler],
     responses={
@@ -41,7 +41,7 @@ def list_sprinkler(db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/get/{id}',
+    '/{id}',
     status_code=status.HTTP_200_OK,
     response_model=Sprinkler,
     responses={
@@ -66,7 +66,7 @@ def get_sprinkler(id:int, response: Response, db: Session = Depends(get_db)):
 
 
 @router.post(
-    '/update',
+    '',
     status_code=status.HTTP_200_OK,
     response_model=Sprinkler,
     responses={
@@ -98,7 +98,7 @@ def update_sprinkler(data:SprinklerEdit, response: Response, db: Session = Depen
 
 
 @router.put(
-    '/create',
+    '',
     status_code=status.HTTP_201_CREATED,
     response_model=Sprinkler,
     responses={
@@ -122,7 +122,7 @@ def create_sprinkler(data: SprinklerAdd, response: Response, db: Session = Depen
 
 
 @router.delete(
-    '/delete/{id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {

@@ -30,7 +30,7 @@ router = APIRouter()
 
 
 @router.get(
-    '/list',
+    '',
     status_code=status.HTTP_200_OK,
     response_model=List[WaterDayDetail],
     responses={
@@ -44,7 +44,7 @@ def list_water_day(db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/get/{id}',
+    '/{id}',
     status_code=status.HTTP_200_OK,
     response_model=WaterDayDetail,
     responses={
@@ -68,7 +68,7 @@ def get_water_day(id: int, response: Response, db: Session = Depends(get_db)):
 
 
 @router.post(
-    '/update',
+    '',
     status_code=status.HTTP_200_OK,
     response_model=WaterDay,
     responses={
@@ -99,7 +99,7 @@ def update_water_day(data: WaterDayEdit, response: Response, db: Session = Depen
 
 
 @router.put(
-    '/create',
+    '',
     status_code=status.HTTP_201_CREATED,
     response_model=WaterDay,
     responses={
@@ -123,7 +123,7 @@ def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depend
 
 
 @router.delete(
-    '/delete/{id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {
