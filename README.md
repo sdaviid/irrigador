@@ -28,6 +28,7 @@ uvicorn app.main:app
 E poderá acessar os docs a partir de:
 
 [localhost:8000/docs](localhost:8000/docs)
+
 [localhost:8000/redoc](localhost:8000/redoc)
 
 ## Funcionamento
