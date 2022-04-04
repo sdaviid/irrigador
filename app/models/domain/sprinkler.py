@@ -26,6 +26,8 @@ class Sprinkler(ModelBase, Base):
     plant = relationship("Plant", uselist=False, backref=backref("sprinkler"))
     active = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.utcnow())
+
+
     @classmethod
     def add(cls, session, data):
         sprinkler = Sprinkler()
@@ -35,6 +37,8 @@ class Sprinkler(ModelBase, Base):
         session.commit()
         session.refresh(sprinkler)
         return Sprinkler.find_by_id(session=session, id=sprinkler.id)
+
+
     @classmethod
     def update(cls, session, data):
         if Sprinkler.has_id(session=session, id=data.id) == False:

@@ -30,6 +30,8 @@ class Plant(ModelBase, Base):
     log = relationship("Log", uselist=False, backref=backref("plant"))
     active = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.utcnow())
+
+
     @classmethod
     def validate_data(cls, session, data):
         if not Sprinkler.has_id(session=session, id=data.sprinkler_id):
@@ -38,6 +40,14 @@ class Plant(ModelBase, Base):
                 "exception": f'sprinkler_id {data.sprinkler_id} not found'
             }
         return True
+        temp_sprinkler_data = Sprinkler.find_by_id(session=session, id=data.sprinkler_id)
+        if not temp_sprinkler_data.active == True:
+            return {
+                "message": "Sprinkler specified are not active",
+                "exception": f'sprinkler_id {data.sprinkler_id} are inactive'
+            }
+
+
     @classmethod
     def add(cls, session, data):
         temp_validate = Plant.validate_data(session=session, data=data)
@@ -51,6 +61,8 @@ class Plant(ModelBase, Base):
         session.commit()
         session.refresh(plant)
         return Plant.find_by_id(session=session, id=plant.id)
+
+
     @classmethod
     def update(cls, session, data):
         if Plant.has_id(session=session, id=data.id) == False:
@@ -65,6 +77,8 @@ class Plant(ModelBase, Base):
         session.commit()
         session.refresh(original)
         return original
+
+
     @classmethod
     def list_all(cls, session):
         return session.query(
@@ -75,6 +89,8 @@ class Plant(ModelBase, Base):
             Sprinkler.description.label('sprinkler_description'),
             cls.date_created
         ).filter().all()
+
+
     @classmethod
     def find_by_id_detail(cls, session, id):
         if cls.has_id(session=session, id=id) == False:

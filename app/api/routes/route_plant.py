@@ -39,6 +39,7 @@ router = APIRouter()
     }
 )
 def list_plant(db: Session = Depends(get_db)):
+    """List all plants"""
     return plant.Plant.list_all(session=db)
 
 
@@ -59,6 +60,7 @@ def list_plant(db: Session = Depends(get_db)):
     }
 )
 def get_plant(plantId: int, response: Response, db: Session = Depends(get_db)):
+    """Retrieve information about an plant"""
     temp_res = plant.Plant.find_by_id_detail(session=db, id=plantId)
     if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -86,6 +88,7 @@ def get_plant(plantId: int, response: Response, db: Session = Depends(get_db)):
     }
 )
 def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_db)):
+    """Update specified plant"""
     temp_res = plant.Plant.update(session=db, data=data)
     if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -114,6 +117,7 @@ def update_plant(data: PlantEdit, response: Response, db: Session = Depends(get_
     }
 )
 def create_plant(data: PlantAdd, response: Response, db: Session = Depends(get_db)):
+    """Create a new plant"""
     temp_res = plant.Plant.add(session=db, data=data)
     print(type(temp_res))
     if isinstance(temp_res, dict):
@@ -138,6 +142,7 @@ def create_plant(data: PlantAdd, response: Response, db: Session = Depends(get_d
     }
 )
 def delete_plant(plantId:int, response: Response, db: Session = Depends(get_db)):
+    """Delete specified plant"""
     temp_res = plant.Plant.delete(session=db, id=plantId)
     if not isinstance(temp_res, bool):
         response.status_code = status.HTTP_404_NOT_FOUND

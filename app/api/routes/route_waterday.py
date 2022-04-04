@@ -40,6 +40,7 @@ router = APIRouter()
     }
 )
 def list_water_day(db: Session = Depends(get_db)):
+    """List information about all water days"""
     return waterday.WaterDay.list_all(session=db)
 
 
@@ -60,6 +61,7 @@ def list_water_day(db: Session = Depends(get_db)):
     }
 )
 def get_water_day(waterDayId: int, response: Response, db: Session = Depends(get_db)):
+    """Retrieve information about specified waterday"""
     temp_res = waterday.WaterDay.find_by_id_detail(session=db, id=waterDayId)
     if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -87,6 +89,7 @@ def get_water_day(waterDayId: int, response: Response, db: Session = Depends(get
     }
 )
 def update_water_day(data: WaterDayEdit, response: Response, db: Session = Depends(get_db)):
+    """Update specified waterday data"""
     temp_res = waterday.WaterDay.update(session=db, data=data)
     if not isinstance(temp_res, waterday.WaterDay):
         if isinstance(temp_res, dict):
@@ -115,6 +118,7 @@ def update_water_day(data: WaterDayEdit, response: Response, db: Session = Depen
     }
 )
 def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depends(get_db)):
+    """Create new waterday"""
     temp_res = waterday.WaterDay.add(session=db, data=data)
     if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -138,6 +142,7 @@ def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depend
     }
 )
 def delete_water_day(waterDayId:int, response: Response, db: Session = Depends(get_db)):
+    """Delete specified waterday"""
     temp_res = waterday.WaterDay.delete(session=db, id=waterDayId)
     if not isinstance(temp_res, bool):
         response.status_code = status.HTTP_404_NOT_FOUND

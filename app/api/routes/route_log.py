@@ -38,6 +38,7 @@ router = APIRouter()
     }
 )
 def list_log(db: Session = Depends(get_db)):
+    """List all logs"""
     return log.Log.list_all(session=db)
 
 
@@ -56,6 +57,7 @@ def list_log(db: Session = Depends(get_db)):
     }
 )
 def list_history(date_start: str, response: Response, date_end: str = None, db: Session = Depends(get_db)):
+    """Retrieve logs about an date"""
     temp_res = log.Log.find_by_date(session=db, date_start=date_start, date_end=date_end)
     if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -82,6 +84,7 @@ def list_history(date_start: str, response: Response, date_end: str = None, db: 
     }
 )
 def get_log(logId: int, response: Response, db: Session = Depends(get_db)):
+    """Retrieve information about specific log"""
     temp_res = log.Log.find_by_id(session=db, id=logId)
     if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -107,6 +110,7 @@ def get_log(logId: int, response: Response, db: Session = Depends(get_db)):
     }
 )
 def create_log(data: LogAdd, response: Response, db: Session = Depends(get_db)):
+    """Create a new log"""
     temp_res = log.Log.add(session=db, data=data)
     if isinstance(temp_res, dict):
         response.status_code = status.HTTP_400_BAD_REQUEST

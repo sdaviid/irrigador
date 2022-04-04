@@ -33,6 +33,8 @@ class WaterDay(ModelBase, Base):
     plant_id = Column(Integer, ForeignKey("plant.id"))
     active = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.utcnow())
+
+
     @classmethod
     def validate_data(cls, session, data):
         if not Plant.has_id(session=session, id=data.plant_id):
@@ -52,6 +54,8 @@ class WaterDay(ModelBase, Base):
                 "exception": f"Weekday {data.week_day} is invalid"
             }
         return True
+
+
     @classmethod
     def add(cls, session, data):
         temp_validate = WaterDay.validate_data(session=session, data=data)
@@ -67,6 +71,8 @@ class WaterDay(ModelBase, Base):
         session.commit()
         session.refresh(waterday)
         return WaterDay.find_by_id(session=session, id=waterday.id)
+
+
     @classmethod
     def update(cls, session, data):
         if WaterDay.has_id(session=session, id=data.id) == False:
@@ -83,6 +89,8 @@ class WaterDay(ModelBase, Base):
         session.commit()
         session.refresh(original)
         return original
+
+
     @classmethod
     def list_all(cls, session):
         return session.query(
@@ -95,6 +103,8 @@ class WaterDay(ModelBase, Base):
             Plant.description.label('plant_description'),
             cls.date_created
         ).filter().all()
+
+
     @classmethod
     def find_by_id_detail(cls, session, id):
         if cls.has_id(session=session, id=id) == False:

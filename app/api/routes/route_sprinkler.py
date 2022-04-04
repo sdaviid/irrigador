@@ -37,6 +37,7 @@ router = APIRouter()
     }
 )
 def list_sprinkler(db: Session = Depends(get_db)):
+    """List information about all sprinklers"""
     return sprinkler.Sprinkler.list_all(session=db)
 
 
@@ -85,6 +86,7 @@ def get_sprinkler(sprinklerId:int, response: Response, db: Session = Depends(get
     }
 )
 def update_sprinkler(data:SprinklerEdit, response: Response, db: Session = Depends(get_db)):
+    """Update specified sprinkler"""
     temp_res = sprinkler.Sprinkler.update(session=db, data=data)
     if not isinstance(temp_res, sprinkler.Sprinkler):
         if isinstance(temp_res, dict):
@@ -114,6 +116,7 @@ def update_sprinkler(data:SprinklerEdit, response: Response, db: Session = Depen
     }
 )
 def create_sprinkler(data: SprinklerAdd, response: Response, db: Session = Depends(get_db)):
+    """Create a new sprinkler"""
     temp_res = sprinkler.Sprinkler.add(session=db, data=data)
     if not isinstance(temp_res, sprinkler.Sprinkler):
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -137,6 +140,7 @@ def create_sprinkler(data: SprinklerAdd, response: Response, db: Session = Depen
     }
 )
 def delete_sprinkler(sprinklerId:int, response: Response, db: Session = Depends(get_db)):
+    """Delete specified sprinkler"""
     temp_res = sprinkler.Sprinkler.delete(session=db, id=sprinklerId)
     if not isinstance(temp_res, bool):
         response.status_code = status.HTTP_404_NOT_FOUND

@@ -35,6 +35,8 @@ class Log(ModelBase, Base):
     plant_id = Column(Integer, ForeignKey("plant.id"))
     key = Column(String(15))
     date_created = Column(DateTime, default=datetime.utcnow())
+
+
     @classmethod
     def validate_data(cls, session, data):
         if not Plant.has_id(session=session, id=data.plant_id):
@@ -48,6 +50,8 @@ class Log(ModelBase, Base):
                 "exception": "Unrecognized key data"
             }
         return True
+
+
     @classmethod
     def add(cls, session, data):
         temp_validate = cls.validate_data(session=session, data=data)
@@ -60,6 +64,8 @@ class Log(ModelBase, Base):
         session.commit()
         session.refresh(log)
         return Log.find_by_id(session=session, id=log.id)
+
+
     @classmethod
     def list_all(cls, session):
         return session.query(
@@ -70,6 +76,8 @@ class Log(ModelBase, Base):
             Sprinkler.description.label('sprinkler_description'),
             cls.date_created
         ).filter().all()
+
+
     @classmethod
     def find_by_id(cls, session, id):
         if cls.has_id(session=session, id=id) == False:
@@ -87,6 +95,8 @@ class Log(ModelBase, Base):
                 cls.date_created
             ).filter_by(id=id).first()
         return response
+
+
     @classmethod
     def find_by_date(cls, session, date_start, date_end=None):
         date_start = str2date(date_start)
