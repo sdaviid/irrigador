@@ -13,8 +13,7 @@ from app.models.domain import log
 from app.models.schemas.log import(
     Log,
     LogAdd,
-    LogDetail,
-    LogHistory
+    LogDetail
 )
 from app.models.schemas.base import(
     errorMessage,
