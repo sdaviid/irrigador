@@ -42,7 +42,7 @@ def list_sprinkler(db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/{sprinklerId}',
+    '/{sprinkler_id}',
     status_code=status.HTTP_200_OK,
     response_model=Sprinkler,
     responses={
@@ -57,9 +57,9 @@ def list_sprinkler(db: Session = Depends(get_db)):
         }
     }
 )
-def get_sprinkler(sprinklerId:int, response: Response, db: Session = Depends(get_db)):
+def get_sprinkler(sprinkler_id:int, response: Response, db: Session = Depends(get_db)):
     """Retrieve information about specific Sprinkler"""
-    temp_res = sprinkler.Sprinkler.find_by_id(session=db, id=sprinklerId)
+    temp_res = sprinkler.Sprinkler.find_by_id(session=db, id=sprinkler_id)
     if not isinstance(temp_res, sprinkler.Sprinkler):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
@@ -125,7 +125,7 @@ def create_sprinkler(data: SprinklerAdd, response: Response, db: Session = Depen
 
 
 @router.delete(
-    '/{sprinklerId}',
+    '/{sprinkler_id}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {
@@ -139,9 +139,9 @@ def create_sprinkler(data: SprinklerAdd, response: Response, db: Session = Depen
         }
     }
 )
-def delete_sprinkler(sprinklerId:int, response: Response, db: Session = Depends(get_db)):
+def delete_sprinkler(sprinkler_id:int, response: Response, db: Session = Depends(get_db)):
     """Delete specified sprinkler"""
-    temp_res = sprinkler.Sprinkler.delete(session=db, id=sprinklerId)
+    temp_res = sprinkler.Sprinkler.delete(session=db, id=sprinkler_id)
     if not isinstance(temp_res, bool):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})

@@ -6,6 +6,7 @@ from fastapi import(
     status,
     APIRouter
 )
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from datetime import datetime
 
@@ -45,7 +46,7 @@ def list_water_day(db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/{waterDayId}',
+    '/{waterday_id}',
     status_code=status.HTTP_200_OK,
     response_model=WaterDayDetail,
     responses={
@@ -60,9 +61,9 @@ def list_water_day(db: Session = Depends(get_db)):
         }
     }
 )
-def get_water_day(waterDayId: int, response: Response, db: Session = Depends(get_db)):
+def get_water_day(waterday_id: int, response: Response, db: Session = Depends(get_db)):
     """Retrieve information about specified waterday"""
-    temp_res = waterday.WaterDay.find_by_id_detail(session=db, id=waterDayId)
+    temp_res = waterday.WaterDay.find_by_id_detail(session=db, id=waterday_id)
     if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
@@ -127,7 +128,7 @@ def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depend
 
 
 @router.delete(
-    '/{waterDayId}',
+    '/{waterday_id}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {
@@ -141,9 +142,9 @@ def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depend
         }
     }
 )
-def delete_water_day(waterDayId:int, response: Response, db: Session = Depends(get_db)):
+def delete_water_day(waterday_id:int, response: Response, db: Session = Depends(get_db)):
     """Delete specified waterday"""
-    temp_res = waterday.WaterDay.delete(session=db, id=waterDayId)
+    temp_res = waterday.WaterDay.delete(session=db, id=waterday_id)
     if not isinstance(temp_res, bool):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
