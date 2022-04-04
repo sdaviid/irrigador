@@ -67,7 +67,7 @@ def list_history(date_start: str, response: Response, date_end: str = None, db: 
 
 
 @router.get(
-    '/{id}',
+    '/{logId}',
     status_code=status.HTTP_200_OK,
     response_model=LogDetail,
     responses={
@@ -82,8 +82,8 @@ def list_history(date_start: str, response: Response, date_end: str = None, db: 
         }
     }
 )
-def get_log(id: int, response: Response, db: Session = Depends(get_db)):
-    temp_res = log.Log.find_by_id(session=db, id=id)
+def get_log(logId: int, response: Response, db: Session = Depends(get_db)):
+    temp_res = log.Log.find_by_id(session=db, id=logId)
     if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})

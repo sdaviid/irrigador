@@ -43,7 +43,7 @@ def list_plant(db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/{id}',
+    '/{plantId}',
     status_code=status.HTTP_200_OK,
     response_model=PlantDetail,
     responses={
@@ -58,8 +58,8 @@ def list_plant(db: Session = Depends(get_db)):
         }
     }
 )
-def get_plant(id: int, response: Response, db: Session = Depends(get_db)):
-    temp_res = plant.Plant.find_by_id_detail(session=db, id=id)
+def get_plant(plantId: int, response: Response, db: Session = Depends(get_db)):
+    temp_res = plant.Plant.find_by_id_detail(session=db, id=plantId)
     if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
@@ -123,7 +123,7 @@ def create_plant(data: PlantAdd, response: Response, db: Session = Depends(get_d
 
 
 @router.delete(
-    '/{id}',
+    '/{plantId}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {
@@ -137,8 +137,8 @@ def create_plant(data: PlantAdd, response: Response, db: Session = Depends(get_d
         }
     }
 )
-def delete_plant(id:int, response: Response, db: Session = Depends(get_db)):
-    temp_res = plant.Plant.delete(session=db, id=id)
+def delete_plant(plantId:int, response: Response, db: Session = Depends(get_db)):
+    temp_res = plant.Plant.delete(session=db, id=plantId)
     if not isinstance(temp_res, bool):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})

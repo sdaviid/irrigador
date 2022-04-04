@@ -44,7 +44,7 @@ def list_water_day(db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/{id}',
+    '/{waterDayId}',
     status_code=status.HTTP_200_OK,
     response_model=WaterDayDetail,
     responses={
@@ -59,8 +59,8 @@ def list_water_day(db: Session = Depends(get_db)):
         }
     }
 )
-def get_water_day(id: int, response: Response, db: Session = Depends(get_db)):
-    temp_res = waterday.WaterDay.find_by_id_detail(session=db, id=id)
+def get_water_day(waterDayId: int, response: Response, db: Session = Depends(get_db)):
+    temp_res = waterday.WaterDay.find_by_id_detail(session=db, id=waterDayId)
     if isinstance(temp_res, str):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
@@ -123,7 +123,7 @@ def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depend
 
 
 @router.delete(
-    '/{id}',
+    '/{waterDayId}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {
@@ -137,8 +137,8 @@ def create_water_day(data: WaterDayAdd, response: Response, db: Session = Depend
         }
     }
 )
-def delete_water_day(id:int, response: Response, db: Session = Depends(get_db)):
-    temp_res = waterday.WaterDay.delete(session=db, id=id)
+def delete_water_day(waterDayId:int, response: Response, db: Session = Depends(get_db)):
+    temp_res = waterday.WaterDay.delete(session=db, id=waterDayId)
     if not isinstance(temp_res, bool):
         response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse(status_code=404, content={"message": temp_res})
