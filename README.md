@@ -46,3 +46,13 @@ Para executa-lo
 ```sh
 python -m pytest -v
 ```
+
+__ATENÇÃO__ Antes de executar os testes tenha certeza de apagar/mover o banco de dados para testes limpos.
+
+
+## TODO
+
+- [] Script simulador irrigador
+- [] Melhorar exceptions
+- [] Docker
+- [] Heroku
