@@ -20,7 +20,7 @@ Primeiramente instalar as dependências
 python -m pip install -r requirements.txt
 ```
 
-E então
+E entãox
 
 ```sh
 uvicorn app.main:app
